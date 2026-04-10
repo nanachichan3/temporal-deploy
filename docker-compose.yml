@@ -1,43 +1,9 @@
 version: '3.8'
 
 services:
-  # Temporal Workflow Engine with PostgreSQL persistence
-  temporal:
-    image: temporalio/auto-setup:1.22.0
-    container_name: factory-temporal
-    ports:
-      - "7233:7233"   # GRPC port
-      - "8233:8233"   # HTTP port
-    environment:
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PWD=postgres
-      - POSTGRES_SEEDS=postgres
-    depends_on:
-      - postgres
-    networks:
-      - temporal-network
-    restart: unless-stopped
-
-  # Temporal Web UI
-  temporal-web:
-    image: temporalio/web:1.22.0
-    container_name: factory-temporal-web
-    ports:
-      - "8080:8080"
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-    depends_on:
-      - temporal
-    networks:
-      - temporal-network
-    restart: unless-stopped
-
-  # PostgreSQL for Temporal persistence
   postgres:
     image: postgres:15-alpine
-    container_name: factory-temporal-postgres
+    container_name: temporal-postgres
     ports:
       - "5432:5432"
     environment:
@@ -46,13 +12,47 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - temporal-network
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  temporal:
+    image: temporalio/auto-setup:1.22.0
+    container_name: temporal
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgres
+      - POSTGRES_SEEDS=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider http://localhost:8233/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  temporal-web:
+    image: temporalio/web:1.22.0
+    container_name: temporal-web
+    ports:
+      - "8080:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    depends_on:
+      - temporal
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
-
-networks:
-  temporal-network:
-    driver: bridge
