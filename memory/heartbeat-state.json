@@ -1,6 +1,6 @@
 {
-  "lastHeartbeat": 1776792000,
-  "timestamp": "2026-04-21T16:40 UTC",
+  "lastHeartbeat": 1776791000,
+  "timestamp": "2026-04-21T16:58 UTC",
   "harness": "Harness 1 (Nanachi/OpenClaw)",
   "factoryStatus": {
     "ceo": "Active",
@@ -22,29 +22,9 @@
     }
   },
   "db": {
-    "projects": 29,
-    "activeProjects": 25,
+    "projects": 25,
     "channels": 8,
     "agents": 4
-  },
-  "pendingTasks": [
-    "Hermes CEO (Nezuko) \u2014 needs daily report cron in hermes-agent-deploy",
-    "Rick (Harness 3) \u2014 not deployed",
-    "mem0 \u2014 self-hosted, not configured"
-  ],
-  "blockers": [
-    "hermes-agent-deploy not updated with shared workspace repos",
-    "startup-factory workspace not in expected location (git reset cleared it)"
-  ],
-  "urgentItems": [
-    "PR Workflow broken \u2014 workspace sync failing (non-fast-forward push)",
-    "Startup Factory Launch Verification cron failing \u2014 removed stale cron"
-  ],
-  "managedServices": {
-    "Hetzner/Coolify": "https://qed.quest/",
-    "GitHub": "https://github.com/nanachichan3",
-    "NanachiDB (Postgres)": "projects DB on pg-nanachi",
-    "Bitwarden": "19 secrets (unlocked via BW_MATER_PASSWORD env)"
   },
   "bitwarden": {
     "total_items": 19,
@@ -54,5 +34,36 @@
       "AI Services": 2,
       "Git/Code": 2
     }
-  }
+  },
+  "coolify": {
+    "total_apps": 30,
+    "deleted_today": [
+      "AIO Sandbox",
+      "deer-flow-builder",
+      "factory-discord"
+    ],
+    "unhealthy": [
+      "Temporal",
+      "factory-v2",
+      "novu"
+    ]
+  },
+  "projects": {
+    "launch": 5,
+    "mvp": 3,
+    "idea": 17,
+    "launch_mrr": "$0",
+    "concerns": [
+      "Self-Degree Framework: Stage=MVP but Status=Launched",
+      "Project [51]: name=None (data issue)",
+      "All projects: $0 MRR, 0 users"
+    ]
+  },
+  "pendingTasks": [
+    "Hermes CEO (Nezuko) \u2014 needs daily report cron in hermes-agent-deploy",
+    "Rick (Harness 3) \u2014 not deployed",
+    "mem0 \u2014 self-hosted, not configured across harnesses",
+    "Clean up unhealthy Coolify apps: Temporal, factory-v2, novu (need confirmation)"
+  ],
+  "blockers": []
 }
